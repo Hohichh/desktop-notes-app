@@ -1,5 +1,7 @@
 package io.hohichh.notes_app.core.storage;
 
-public interface Deserializer {
-    public Object deserialize(String path);
+import java.io.FileNotFoundException;
+
+public interface Deserializer<T> {
+    public T deserialize(String path) throws FileNotFoundException;
 }

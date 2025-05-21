@@ -7,14 +7,14 @@ import java.util.UUID;
 
 @Getter
 @Setter
-abstract public class MediaWrapper {
+abstract public class Media {
     protected final UUID id;
-    protected final UUID note_id;
+    protected final UUID noteId;
     protected String path;
 
-    public MediaWrapper(UUID id, UUID note_id, String path) {
+    public Media(UUID id, UUID noteId, String path) {
         this.id = id;
-        this.note_id = note_id;
+        this.noteId = noteId;
         this.path = path;
     }
 }
