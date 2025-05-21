@@ -1,4 +1,4 @@
-package io.hohichh.notes_app;
+package io.hohichh.notesapp;
 
 import javafx.application.Application;
 import javafx.scene.Scene;

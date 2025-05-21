@@ -1,6 +1,6 @@
-package io.hohichh.notes_app.core.storage;
+package io.hohichh.notesapp.core.db;
 
-import io.hohichh.notes_app.core.model.Note;
+import io.hohichh.notesapp.core.model.Note;
 
 import java.util.List;
 

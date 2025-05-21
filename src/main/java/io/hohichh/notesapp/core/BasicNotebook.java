@@ -1,12 +1,12 @@
-package io.hohichh.notes_app.core;
+package io.hohichh.notesapp.core;
 
-import io.hohichh.notes_app.core.model.Note;
-import io.hohichh.notes_app.core.storage.StorageManager;
+import io.hohichh.notesapp.core.model.Note;
+import io.hohichh.notesapp.core.db.StorageManager;
 
 import java.util.List;
 
 public class BasicNotebook implements Notebook {
-    private StorageManager storageManager;
+    private final StorageManager storageManager;
 
     public BasicNotebook(StorageManager storageManager) {
         this.storageManager = storageManager;

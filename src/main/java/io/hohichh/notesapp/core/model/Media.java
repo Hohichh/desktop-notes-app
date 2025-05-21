@@ -1,4 +1,4 @@
-package io.hohichh.notes_app.core.model;
+package io.hohichh.notesapp.core.model;
 
 import lombok.Getter;
 import lombok.Setter;

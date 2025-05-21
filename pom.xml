@@ -37,6 +37,12 @@
             <version>24.0.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>24.0.1</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -54,7 +60,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>io.hohichh.notes_app.MainApp</mainClass>
+                    <mainClass>io.hohichh.notesapp.MainApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>
