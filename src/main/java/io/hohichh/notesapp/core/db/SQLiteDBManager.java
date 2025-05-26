@@ -25,7 +25,7 @@ public class SQLiteDBManager {
             conn.setAutoCommit(false);
 
             stmt.execute(CREATE_NOTES_TABLE);
-            stmt.execute(CREATE_IMAGES_TABLE);
+            stmt.execute(CREATE_MEDIA_TABLE);
             try{
                 conn.commit();
             } catch (SQLException e) {

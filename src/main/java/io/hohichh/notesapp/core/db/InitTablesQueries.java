@@ -9,8 +9,8 @@ public class InitTablesQueries {
             + "created_at INTEGER NOT NULL, "
             + "updated_at INTEGER NOT NULL );";
 
-    public static final String CREATE_IMAGES_TABLE =
-            "CREATE TABLE IF NOT EXISTS images ("
+    public static final String CREATE_MEDIA_TABLE =
+            "CREATE TABLE IF NOT EXISTS media ("
             + "id TEXT NOT NULL PRIMARY KEY, "
             + "note_id TEXT NOT NULL, "
             + "path TEXT NOT NULL, "
