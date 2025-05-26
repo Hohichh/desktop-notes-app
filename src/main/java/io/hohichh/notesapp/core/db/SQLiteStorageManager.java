@@ -1,10 +1,17 @@
 package io.hohichh.notesapp.core.db;
 
 import io.hohichh.notesapp.core.model.Note;
+import static io.hohichh.notesapp.core.db.NoteQueries.*;
+import static io.hohichh.notesapp.core.db.ImageQueries.*;
 
 import java.util.List;
 
 public class SQLiteStorageManager implements StorageManager{
+
+    public SQLiteStorageManager() {
+
+    }
+
     @Override
     public void createNote(Note note) {
 
@@ -29,4 +36,6 @@ public class SQLiteStorageManager implements StorageManager{
     public List<Note> getAllNotes() {
         return List.of();
     }
+
+    
 }

@@ -9,10 +9,9 @@ import java.util.UUID;
 @Setter
 @Getter
 public class ImageDTO extends Media{
-    private String insertLabel;
+
     public ImageDTO(UUID noteId, String notePath, String insertLabel) {
-        super(UUID.randomUUID(),noteId,notePath);
-        this.insertLabel = insertLabel;
+        super(UUID.randomUUID(), noteId, notePath, insertLabel);
     }
 
     @Override
