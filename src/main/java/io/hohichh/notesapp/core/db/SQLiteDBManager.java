@@ -19,12 +19,19 @@ public class SQLiteDBManager {
         return DriverManager.getConnection(DB_URL);
     }
 
-    public static void initTables() throws SQLException{
+    public static void initTables() throws SQLException {
         try(Connection conn = SQLiteDBManager.getConnection();
-            Statement stmt = conn.createStatement()
-                ) {
+            Statement stmt = conn.createStatement()) {
+            conn.setAutoCommit(false);
+
             stmt.execute(CREATE_NOTES_TABLE);
             stmt.execute(CREATE_IMAGES_TABLE);
+            try{
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw e;
+            }
         }
     }
 }
