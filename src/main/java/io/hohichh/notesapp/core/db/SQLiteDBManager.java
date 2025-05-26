@@ -21,7 +21,7 @@ public class SQLiteDBManager {
 
     public static void initTables() throws SQLException{
         try(Connection conn = SQLiteDBManager.getConnection();
-            Statement stmt = conn.createStatement();
+            Statement stmt = conn.createStatement()
                 ) {
             stmt.execute(CREATE_NOTES_TABLE);
             stmt.execute(CREATE_IMAGES_TABLE);

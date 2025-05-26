@@ -22,7 +22,7 @@ public class FXImageLoader implements Serializer<Image>, Deserializer<Image>  {
             img = new Image(new FileInputStream(path));
             return img;
         }catch (FileNotFoundException e) {
-            throw new ImageLoadException("Failed to deserialize image: " + e.getMessage());
+            throw new ImageLoadException("Failed to deserialize image: " + e.getMessage(), e);
         }
     }
 
@@ -51,7 +51,7 @@ public class FXImageLoader implements Serializer<Image>, Deserializer<Image>  {
             }
 
         } catch (IllegalArgumentException | IOException e) {
-            throw new ImageLoadException("Failed to serialize image: " + e.getMessage());
+            throw new ImageLoadException("Failed to serialize image: " + e.getMessage(), e);
         }
     }
 
