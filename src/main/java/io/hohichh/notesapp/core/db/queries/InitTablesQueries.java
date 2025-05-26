@@ -1,4 +1,4 @@
-package io.hohichh.notesapp.core.db;
+package io.hohichh.notesapp.core.db.queries;
 
 public class InitTablesQueries {
     public static final String CREATE_NOTES_TABLE =

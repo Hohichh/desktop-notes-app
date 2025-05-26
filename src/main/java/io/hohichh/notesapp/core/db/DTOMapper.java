@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,6 +64,27 @@ public class DTOMapper {
             }
         }
         return note;
+    }
+
+    public static List<Note> resultSetToNoteList(final ResultSet rsNoteList)
+        throws SQLException {
+        List<Note> noteList = new ArrayList<>();
+        while(rsNoteList.next()){
+            Note note = new Note(UUID.fromString(
+                    rsNoteList.getString("id")));
+            note.setTitle(rsNoteList.getString("title"));
+            note.setContent(rsNoteList.getString("content"));
+            note.setCreatedAt(LocalDateTime.ofInstant(
+                    Instant.ofEpochSecond(rsNoteList.getLong("created_at")),
+                    ZoneId.systemDefault()
+            ));
+            note.setUpdatedAt(LocalDateTime.ofInstant(
+                    Instant.ofEpochSecond(rsNoteList.getLong("updated_at")),
+                    ZoneId.systemDefault()
+            ));
+            noteList.add(note);
+        }
+        return noteList;
     }
     public static void mediaToCreateStmt(final List<Media> media,
                                         final PreparedStatement ps) throws SQLException {

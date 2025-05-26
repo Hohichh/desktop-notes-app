@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static io.hohichh.notesapp.core.db.InitTablesQueries.*;
+import static io.hohichh.notesapp.core.db.queries.InitTablesQueries.*;
 
 public class SQLiteDBManager {
     private static String DB_URL= "jdbc:sqlite:notes.db";

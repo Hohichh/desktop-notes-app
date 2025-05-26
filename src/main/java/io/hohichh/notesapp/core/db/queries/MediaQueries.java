@@ -1,4 +1,4 @@
-package io.hohichh.notesapp.core.db;
+package io.hohichh.notesapp.core.db.queries;
 
 public class MediaQueries {
     public static final String CREATE_MEDIA =

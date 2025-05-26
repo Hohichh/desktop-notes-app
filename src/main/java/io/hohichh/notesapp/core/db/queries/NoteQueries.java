@@ -1,4 +1,4 @@
-package io.hohichh.notesapp.core.db;
+package io.hohichh.notesapp.core.db.queries;
 
 public class NoteQueries {
     public static final String CREATE_NOTE =
@@ -18,7 +18,7 @@ public class NoteQueries {
     public static final String DELETE_NOTE =
             "DELETE FROM notes " +
             "WHERE id = ?";
-    public static final String SELECT_ALL =
+    public static final String SELECT_ALL_NOTES =
             "SELECT * FROM notes " +
             "ORDER BY updated_at DESC";
 }   

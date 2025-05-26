@@ -1,21 +1,17 @@
 package io.hohichh.notesapp.core.db;
 
 import io.hohichh.notesapp.core.exceptions.SqliteRepException;
-import io.hohichh.notesapp.core.model.Media;
 import io.hohichh.notesapp.core.model.Note;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
-import java.util.UUID;
 
-import static io.hohichh.notesapp.core.db.MediaQueries.*;
-import static io.hohichh.notesapp.core.db.NoteQueries.*;
+
+import static io.hohichh.notesapp.core.db.queries.MediaQueries.*;
+import static io.hohichh.notesapp.core.db.queries.NoteQueries.*;
 
 
 public class SQLiteRepository implements Repository {
@@ -37,15 +33,15 @@ public class SQLiteRepository implements Repository {
 
             conn.setAutoCommit(false);
             try{
-                DTOMapper.noteToStatement(note, psNote);
+                DTOMapper.noteToCreateStmt(note, psNote);
                 psNote.executeUpdate();
 
-                DTOMapper.mediaToStatement(note.getMediaContent(), psMedia);
+                DTOMapper.mediaToCreateStmt(note.getMediaContent(), psMedia);
                 psMedia.executeBatch();
                 conn.commit();
             }catch (SQLException e){
                 conn.rollback();
-                throw new SQLException("Can't commit transaction: " + e.getMessage(), e);
+                throw new SQLException("Fail commit transaction: " + e.getMessage(), e);
             }
         } catch (SQLException e) {
             throw new SqliteRepException("Can't create a note: " + e.getMessage(), e);
@@ -68,7 +64,7 @@ public class SQLiteRepository implements Repository {
                 conn.commit();
             }catch (SQLException e){
                 conn.rollback();
-                throw new SQLException("Can't commit transaction: " + e.getMessage(), e);
+                throw new SQLException("Fail commit transaction: " + e.getMessage(), e);
             }
 
         }catch (SQLException e) {
@@ -83,38 +79,64 @@ public class SQLiteRepository implements Repository {
             PreparedStatement psNote = conn.prepareStatement(SELECT_NOTE);
             PreparedStatement psMedia = conn.prepareStatement(SELECT_MEDIA_BY_NOTE_ID)){
 
-            conn.setAutoCommit(false);
-            try{
-                psNote.setString(1, id);
-                ResultSet rsNote = psNote.executeQuery();
-                psMedia.setString(1, id);
-                ResultSet rsMedia = psMedia.executeQuery();
-                conn.commit();
+            psNote.setString(1, id);
+            psMedia.setString(1, id);
+            try(ResultSet rsNote = psNote.executeQuery();
+                ResultSet rsMedia = psMedia.executeQuery();){
 
                 note = DTOMapper.resultSetToNote(rsNote, rsMedia);
             }catch (SQLException e){
-                conn.rollback();
-                throw new SQLException("Can't commit transaction: " + e.getMessage(), e);
+                throw new SQLException("Fail commit transaction: " + e.getMessage(), e);
             }
-            return note;
         }catch (SQLException e){
             throw new SqliteRepException("Can't get note: " + e.getMessage(), e);
         }
+        return note;
     }
 
     @Override
-    public void updateNote(Note note) {
+    public void updateNote(Note note) throws SqliteRepException {
         try(Connection conn = SQLiteDBManager.getConnection();
             PreparedStatement psNote = conn.prepareStatement(UPDATE_NOTE);
-            PreparedStatement psMedia = conn.prepareStatement("")){
+            PreparedStatement psDelOldMedia = conn.prepareStatement(DELETE_MEDIA_BY_NOTE_ID);
+            PreparedStatement psMedia = conn.prepareStatement(CREATE_MEDIA)){
+
+            conn.setAutoCommit(false);
+            try{
+                psDelOldMedia.setString(1, note.getId().toString());
+                psDelOldMedia.executeUpdate();
+
+                DTOMapper.mediaToCreateStmt(note.getMediaContent(), psMedia);
+                psMedia.executeUpdate();
+
+                DTOMapper.noteToUpdateStmt(note, psNote);
+                psNote.executeUpdate();
+
+                conn.commit();
+            }catch (SQLException e){
+                conn.rollback();
+                throw new SQLException("Fail commit transaction: " + e.getMessage(), e);
+            }
 
         }catch (SQLException e){
-
+            throw new SqliteRepException("Can't update note: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public List<Note> getAllNotes() {
-        return List.of();
+    public List<Note> getAllNotes() throws SqliteRepException {
+        List<Note> notes = null;
+        try(Connection conn = SQLiteDBManager.getConnection();
+            PreparedStatement psNotes = conn.prepareStatement(SELECT_ALL_NOTES)){
+
+            try(ResultSet rsNotes = psNotes.executeQuery()){
+                notes = DTOMapper.resultSetToNoteList(rsNotes);
+            } catch (SQLException e) {
+                throw new SQLException("Fail commit transaction: " + e.getMessage(), e);
+            }
+        }catch (SQLException e){
+            throw new SqliteRepException("Can't get all notes: " + e.getMessage(), e);
+        }
+        return notes;
     }
 }
