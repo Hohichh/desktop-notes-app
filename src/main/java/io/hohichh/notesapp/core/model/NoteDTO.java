@@ -8,22 +8,21 @@ import java.util.UUID;
 
 @Getter
 public class NoteDTO extends Note {
-    private final List<ImageDTO> images;
+
     public NoteDTO() {
         super(UUID.randomUUID());
-        images = new ArrayList<>();
     }
 
     public void addImage(ImageDTO image) {
-        images.add(image);
+        mediaContent.add(image);
     }
 
     public void removeImage(ImageDTO image) {
-        images.remove(image);
+        mediaContent.remove(image);
     }
 
     public void removeImage(UUID id) {
-        images.removeIf(image -> image.getId().equals(id));
+        mediaContent.removeIf(image -> image.getId().equals(id));
     }
 
     @Override
