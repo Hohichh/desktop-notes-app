@@ -36,33 +36,17 @@ public class SQLiteRepository implements Repository {
             PreparedStatement psMedia = conn.prepareStatement(CREATE_MEDIA)) {
 
             conn.setAutoCommit(false);
-
             try{
-                psNote.setString(1, note.getId().toString());
-                psNote.setString(2, note.getTitle());
-                psNote.setString(3, note.getContent());
-                psNote.setLong(4, note.getCreatedAt()
-                        .atZone(ZoneId.systemDefault()).toEpochSecond()
-                );
-                psNote.setLong(5, note.getUpdatedAt()
-                        .atZone(ZoneId.systemDefault()).toEpochSecond()
-                );
+                DTOMapper.noteToStatement(note, psNote);
                 psNote.executeUpdate();
 
-                for(Media mediaObj : note.getMediaContent()){
-                    psMedia.setString(1, mediaObj.getId().toString());
-                    psMedia.setString(2, mediaObj.getNoteId().toString());
-                    psMedia.setString(3, mediaObj.getPath());
-                    psMedia.setString(4, mediaObj.getInsertLabel());
-                    psMedia.addBatch();
-                }
+                DTOMapper.mediaToStatement(note.getMediaContent(), psMedia);
                 psMedia.executeBatch();
                 conn.commit();
             }catch (SQLException e){
                 conn.rollback();
                 throw new SQLException("Can't commit transaction: " + e.getMessage(), e);
             }
-
         } catch (SQLException e) {
             throw new SqliteRepException("Can't create a note: " + e.getMessage(), e);
         }
@@ -75,7 +59,6 @@ public class SQLiteRepository implements Repository {
             PreparedStatement psMedia = conn.prepareStatement(DELETE_MEDIA_BY_NOTE_ID)){
 
             conn.setAutoCommit(false);
-
             try{
                 psMedia.setString(1, id);
                 psMedia.executeUpdate();
@@ -108,30 +91,7 @@ public class SQLiteRepository implements Repository {
                 ResultSet rsMedia = psMedia.executeQuery();
                 conn.commit();
 
-                if(rsNote.next()){
-                    note = new Note(UUID.fromString(
-                            rsNote.getString("id")));
-                    note.setTitle(rsNote.getString("title"));
-                    note.setContent(rsNote.getString("content"));
-                    note.setCreatedAt(LocalDateTime.ofInstant(
-                            Instant.ofEpochSecond(rsNote.getLong("created_at")),
-                            ZoneId.systemDefault()
-                    ));
-                    note.setUpdatedAt(LocalDateTime.ofInstant(
-                            Instant.ofEpochSecond(rsNote.getLong("updated_at")),
-                            ZoneId.systemDefault()
-                    ));
-
-                    while(rsMedia.next()){
-                        Media mediaObj = new Media(
-                                UUID.fromString(rsNote.getString("id")),
-                                UUID.fromString(rsNote.getString("note_id")),
-                                rsMedia.getString("path"),
-                                rsMedia.getString("insert_label")
-                        );
-                        note.addMedia(mediaObj);
-                    }
-                }
+                note = DTOMapper.resultSetToNote(rsNote, rsMedia);
             }catch (SQLException e){
                 conn.rollback();
                 throw new SQLException("Can't commit transaction: " + e.getMessage(), e);
