@@ -4,7 +4,7 @@ import io.hohichh.notesapp.core.model.Note;
 
 import java.util.List;
 
-public interface StorageManager {
+public interface Repository {
     public void createNote(Note note);
     public void deleteNote(String id);
     public Note getNote(String id);
