@@ -1,41 +1,64 @@
 package io.hohichh.notesapp.core;
 
+import io.hohichh.notesapp.core.db.Repository;
+import io.hohichh.notesapp.core.exceptions.StorageException;
 import io.hohichh.notesapp.core.model.Note;
 import io.hohichh.notesapp.core.db.StorageManager;
 
 import java.util.List;
 
 
-//todo:релизнуть менеджер бд и подумать как скомпоновать это с стореджем картинок
+//todo:подумать как скомпоновать репозиторий с стореджем картинок
 public class BasicNotebook implements Notebook {
-    private final StorageManager storageManager;
+    private final Repository repository;
 
-    public BasicNotebook(StorageManager storageManager) {
-        this.storageManager = storageManager;
+    public BasicNotebook(Repository repository) {
+        this.repository = repository;
     }
 
     @Override
     public void createNote(Note note) {
-        storageManager.createNote(note);
+        try{
+            repository.createNote(note);
+        } catch (StorageException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override
     public void updateNote(Note note) {
-        storageManager.updateNote(note);
+        try{
+            repository.updateNote(note);
+        } catch (StorageException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public Note getNote(String id) {
-        return storageManager.getNote(id);
+        try{
+            return repository.getNote(id);
+        } catch (StorageException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public List<Note> getAllNotes() {
-        return storageManager.getAllNotes();
+        try{
+            return repository.getAllNotes();
+        } catch (StorageException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void deleteNote(String id) {
-        storageManager.deleteNote(id);
+        try{
+            repository.deleteNote(id);
+        } catch (StorageException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
