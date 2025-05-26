@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class DTOMapper {
-    public static void noteToStatement(final Note note,
+    public static void noteToCreateStmt(final Note note,
                                        final PreparedStatement ps) throws SQLException {
         ps.setString(1, note.getId().toString());
         ps.setString(2, note.getTitle());
@@ -23,6 +23,15 @@ public class DTOMapper {
                 .atZone(ZoneId.systemDefault()).toEpochSecond()
         );
         ps.setLong(5, note.getUpdatedAt()
+                .atZone(ZoneId.systemDefault()).toEpochSecond()
+        );
+    }
+
+    public static void noteToUpdateStmt(final Note note,
+                                        final PreparedStatement ps) throws SQLException {
+        ps.setString(1, note.getTitle());
+        ps.setString(2, note.getContent());
+        ps.setLong(3, note.getUpdatedAt()
                 .atZone(ZoneId.systemDefault()).toEpochSecond()
         );
     }
@@ -55,7 +64,7 @@ public class DTOMapper {
         }
         return note;
     }
-    public static void mediaToStatement(final List<Media> media,
+    public static void mediaToCreateStmt(final List<Media> media,
                                         final PreparedStatement ps) throws SQLException {
         for(Media mediaObj : media){
             ps.setString(1, mediaObj.getId().toString());
