@@ -10,16 +10,41 @@ import java.util.UUID;
 
 @Getter
 @Setter
-abstract public class Note {
+public class Note {
     protected final UUID id;
     protected String title;
     protected String content;
-    protected LocalDateTime createdAt; //todo: почитать про хранение времени в бд, про работу с localdatetime
+    protected LocalDateTime createdAt;
     protected LocalDateTime updatedAt;
     protected final List<Media> mediaContent;
 
     public Note(UUID id){
         this.id = id;
         mediaContent = new ArrayList<>();
+    }
+
+    public void addMedia(Media media) {
+        mediaContent.add(media);
+    }
+
+    public void removeImage(Media media) {
+        mediaContent.remove(media);
+    }
+
+    public void removeImage(UUID id) {
+        mediaContent.removeIf(media -> media.getId().equals(id));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Note note = (Note) o;
+        return getId().equals(note.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
     }
 }

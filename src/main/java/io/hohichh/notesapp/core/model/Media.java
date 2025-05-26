@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-abstract public class Media {
+public class Media {
     protected final UUID id;
     protected final UUID noteId;
     protected String path;
@@ -18,5 +18,18 @@ abstract public class Media {
         this.noteId = noteId;
         this.path = path;
         this.insertLabel = insertLabel;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Media mediaDTO = (Media) o;
+        return getNoteId().equals(mediaDTO.getNoteId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getNoteId().hashCode();
     }
 }
