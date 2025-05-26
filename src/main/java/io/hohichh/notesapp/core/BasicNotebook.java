@@ -3,7 +3,6 @@ package io.hohichh.notesapp.core;
 import io.hohichh.notesapp.core.db.Repository;
 import io.hohichh.notesapp.core.exceptions.StorageException;
 import io.hohichh.notesapp.core.model.Note;
-import io.hohichh.notesapp.core.db.StorageManager;
 
 import java.util.List;
 
