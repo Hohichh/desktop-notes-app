@@ -1,5 +1,6 @@
 package io.hohichh.notesapp.core.model;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@Builder
 public class Note {
     protected final UUID id;
     protected String title;
@@ -20,8 +22,13 @@ public class Note {
 
     public Note(UUID id){
         this.id = id;
+        title = "";
+        content = "";
+        createdAt = LocalDateTime.now();
+        updatedAt = createdAt;
         mediaContent = new ArrayList<>();
     }
+
 
     public void addMedia(Media media) {
         mediaContent.add(media);

@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 
-public class FXImageLoader implements Serializer<Image>, Deserializer<Image>  {
+public class FXImageLoader implements FileLoader<Image>  {
     @Override
     public Image deserialize(String path) throws ImageLoadException{
         Image img = null;

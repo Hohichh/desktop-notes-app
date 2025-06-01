@@ -1,6 +1,6 @@
 package io.hohichh.notesapp.core.exceptions;
 
-public class StorageException extends Exception{
+public class StorageException extends RuntimeException{
     public StorageException(){
         super();
     }

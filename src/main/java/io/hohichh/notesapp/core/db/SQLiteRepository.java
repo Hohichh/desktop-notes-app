@@ -117,7 +117,6 @@ public class SQLiteRepository implements Repository {
                 conn.rollback();
                 throw new SQLException("Fail commit transaction: " + e.getMessage(), e);
             }
-
         }catch (SQLException e){
             throw new SqliteRepException("Can't update note: " + e.getMessage(), e);
         }

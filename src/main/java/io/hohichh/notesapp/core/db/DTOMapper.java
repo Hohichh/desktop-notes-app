@@ -6,7 +6,6 @@ import io.hohichh.notesapp.core.model.Note;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -20,39 +19,28 @@ public class DTOMapper {
         ps.setString(1, note.getId().toString());
         ps.setString(2, note.getTitle());
         ps.setString(3, note.getContent());
-        ps.setLong(4, note.getCreatedAt()
-                .atZone(ZoneId.systemDefault()).toEpochSecond()
-        );
-        ps.setLong(5, note.getUpdatedAt()
-                .atZone(ZoneId.systemDefault()).toEpochSecond()
-        );
+        ps.setLong(4, toTimestamp(note.getCreatedAt()));
+        ps.setLong(5, toTimestamp(note.getUpdatedAt()));
     }
 
     public static void noteToUpdateStmt(final Note note,
                                         final PreparedStatement ps) throws SQLException {
         ps.setString(1, note.getTitle());
         ps.setString(2, note.getContent());
-        ps.setLong(3, note.getUpdatedAt()
-                .atZone(ZoneId.systemDefault()).toEpochSecond()
-        );
+        ps.setLong(3, toTimestamp(note.getUpdatedAt()));
     }
     public static Note resultSetToNote(final ResultSet rsNote, ResultSet rsMedia)
             throws SQLException {
         Note note = null;
         if(rsNote.next()){
-            note = new Note(UUID.fromString(
-                    rsNote.getString("id")));
-            note.setTitle(rsNote.getString("title"));
-            note.setContent(rsNote.getString("content"));
-            note.setCreatedAt(LocalDateTime.ofInstant(
-                    Instant.ofEpochSecond(rsNote.getLong("created_at")),
-                    ZoneId.systemDefault()
-            ));
-            note.setUpdatedAt(LocalDateTime.ofInstant(
-                    Instant.ofEpochSecond(rsNote.getLong("updated_at")),
-                    ZoneId.systemDefault()
-            ));
-
+            note = Note.builder()
+                    .id(UUID.fromString(rsNote.getString("id")))
+                    .title(rsNote.getString("title"))
+                    .content(rsNote.getString("content"))
+                    .createdAt(toLocalDateTime(rsNote.getLong("created_at")))
+                    .updatedAt(toLocalDateTime(rsNote.getLong("updated_at")))
+                    .mediaContent(new ArrayList<>())
+                    .build();
             while(rsMedia.next()){
                 Media mediaObj = new Media(
                         UUID.fromString(rsNote.getString("id")),
@@ -70,18 +58,14 @@ public class DTOMapper {
         throws SQLException {
         List<Note> noteList = new ArrayList<>();
         while(rsNoteList.next()){
-            Note note = new Note(UUID.fromString(
-                    rsNoteList.getString("id")));
-            note.setTitle(rsNoteList.getString("title"));
-            note.setContent(rsNoteList.getString("content"));
-            note.setCreatedAt(LocalDateTime.ofInstant(
-                    Instant.ofEpochSecond(rsNoteList.getLong("created_at")),
-                    ZoneId.systemDefault()
-            ));
-            note.setUpdatedAt(LocalDateTime.ofInstant(
-                    Instant.ofEpochSecond(rsNoteList.getLong("updated_at")),
-                    ZoneId.systemDefault()
-            ));
+            Note note = Note.builder()
+                    .id(UUID.fromString(rsNoteList.getString("id")))
+                    .title(rsNoteList.getString("title"))
+                    .content(rsNoteList.getString("content"))
+                    .createdAt(toLocalDateTime(rsNoteList.getLong("created_at")))
+                    .updatedAt(toLocalDateTime(rsNoteList.getLong("updated_at")))
+                    .mediaContent(new ArrayList<>())
+                    .build();
             noteList.add(note);
         }
         return noteList;
@@ -95,5 +79,16 @@ public class DTOMapper {
             ps.setString(4, mediaObj.getInsertLabel());
             ps.addBatch();
         }
+    }
+
+    private static LocalDateTime toLocalDateTime(long timestamp){
+        return LocalDateTime.ofInstant(
+                Instant.ofEpochSecond(timestamp),
+                ZoneId.systemDefault());
+    }
+
+    private static long toTimestamp(final LocalDateTime ldt){
+        return ldt.atZone(
+                ZoneId.systemDefault()).toEpochSecond();
     }
 }
