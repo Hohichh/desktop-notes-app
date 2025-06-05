@@ -5,20 +5,19 @@ import io.hohichh.notesapp.core.exceptions.StorageException;
 import io.hohichh.notesapp.core.model.ImageWrapper;
 import io.hohichh.notesapp.core.model.Media;
 import io.hohichh.notesapp.core.model.Note;
-import io.hohichh.notesapp.core.storage.FXImageLoader;
-import io.hohichh.notesapp.core.storage.FileLoader;
-import io.hohichh.notesapp.core.storage.FileLoaderFactory;
+import io.hohichh.notesapp.core.storage.FileManager;
 import javafx.scene.image.Image;
 
 import java.util.List;
 
 
-//todo:подумать как скомпоновать репозиторий с стореджем картинок
 public class BasicNotebook implements Notebook {
     private final Repository repository;
+    private final FileManager fileManager;
 
-    public BasicNotebook(Repository repository) {
+    public BasicNotebook(Repository repository, FileManager fileManager) {
         this.repository = repository;
+        this.fileManager = fileManager;
     }
 
     @Override
@@ -28,8 +27,7 @@ public class BasicNotebook implements Notebook {
             for(var media : mediaContent) {
                 if (media instanceof ImageWrapper wrapper) {
                     var image = wrapper.getImage();
-                    FileLoader<Image> loader = FileLoaderFactory.getLoader(image.getClass());
-                    loader.serialize(image, wrapper.getPath());
+                    fileManager.save(image, wrapper.getPath());
                 }
             }
             repository.createNote(note);
@@ -41,9 +39,18 @@ public class BasicNotebook implements Notebook {
     @Override
     public void updateNote(Note note) {
         try{
-            //todo тут по хорошему куда-то бы вынести логику удаления файлов
-            //чтобы потом сохранить новые
+            Note oldNote = repository.getNote(note.getId().toString());
+            for(var media : oldNote.getMediaContent()) {
+                fileManager.delete(media.getPath());
+            }
+
             repository.updateNote(note);
+            for(var media : note.getMediaContent()) {
+                if (media instanceof ImageWrapper wrapper) {
+                    var image = wrapper.getImage();
+                    fileManager.save(image, wrapper.getPath());
+                }
+            }
         } catch (StorageException e) {
             throw new RuntimeException(e);
         }
@@ -57,7 +64,11 @@ public class BasicNotebook implements Notebook {
             for (var mediaObj: media){
                 String path = mediaObj.getPath();
                 String ext = path.substring(path.lastIndexOf(".") + 1);
-
+                var obj = fileManager.load(mediaObj.getPath());
+                if(obj instanceof Image image){
+                    ImageWrapper wrapper = new ImageWrapper(mediaObj);
+                    wrapper.setImage(image);
+                }
             }
             return note;
         } catch (StorageException e) {
@@ -77,6 +88,8 @@ public class BasicNotebook implements Notebook {
     @Override
     public void deleteNote(String id) {
         try{
+            //todo перепроверить пути
+            fileManager.delete(id);
             repository.deleteNote(id);
         } catch (StorageException e) {
             throw new RuntimeException(e);
