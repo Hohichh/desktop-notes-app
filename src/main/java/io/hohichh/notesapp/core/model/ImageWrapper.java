@@ -17,6 +17,10 @@ public final class ImageWrapper extends Media{
         super(id, noteId, path, insertLabel);
     }
 
+    public ImageWrapper(Media media){
+        super(media.getId(), media.getNoteId(), media.getPath(), media.getInsertLabel());
+    }
+
     public ImageView getImageView() {
         return new ImageView(image);
     }

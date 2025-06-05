@@ -1,4 +1,4 @@
-package io.hohichh.notesapp.core.storage;
+package io.hohichh.notesapp.core.storage.loaders;
 
 import io.hohichh.notesapp.core.exceptions.ImageLoadException;
 

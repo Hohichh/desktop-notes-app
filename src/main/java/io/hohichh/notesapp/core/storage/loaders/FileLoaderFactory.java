@@ -1,10 +1,8 @@
-package io.hohichh.notesapp.core.storage;
+package io.hohichh.notesapp.core.storage.loaders;
 
 import javafx.scene.image.Image;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class FileLoaderFactory {
