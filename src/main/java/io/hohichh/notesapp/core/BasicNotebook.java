@@ -62,8 +62,6 @@ public class BasicNotebook implements Notebook {
             Note note = repository.getNote(id);
             List<Media> media = note.getMediaContent();
             for (var mediaObj: media){
-                String path = mediaObj.getPath();
-                String ext = path.substring(path.lastIndexOf(".") + 1);
                 var obj = fileManager.load(mediaObj.getPath());
                 if(obj instanceof Image image){
                     ImageWrapper wrapper = new ImageWrapper(mediaObj);
