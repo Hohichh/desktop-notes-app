@@ -10,7 +10,7 @@ import javafx.scene.image.Image;
 
 import java.util.List;
 
-
+//todo: проверить что при обновлении заметки корректно меняется время обновления
 public class BasicNotebook implements Notebook {
     private final Repository repository;
     private final FileManager fileManager;

@@ -25,11 +25,11 @@ public class Media {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Media mediaDTO = (Media) o;
-        return getNoteId().equals(mediaDTO.getNoteId());
+        return id.equals(mediaDTO.getId());
     }
 
     @Override
     public int hashCode() {
-        return getNoteId().hashCode();
+        return getId().hashCode();
     }
 }

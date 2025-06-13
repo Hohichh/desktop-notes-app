@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@Builder
+//todo: подумать над инкапсуляцией методов коллекций в полях
 public class Note {
     protected final UUID id;
     protected String title;
@@ -20,8 +20,8 @@ public class Note {
     protected LocalDateTime updatedAt;
     protected final List<Media> mediaContent;
 
-    public Note(UUID id){
-        this.id = id;
+    public Note(){
+        id = UUID.randomUUID();
         title = "";
         content = "";
         createdAt = LocalDateTime.now();
@@ -29,16 +29,27 @@ public class Note {
         mediaContent = new ArrayList<>();
     }
 
+    @Builder
+    public Note(UUID id, String title, String content,
+                LocalDateTime createdAt, LocalDateTime updatedAt,
+                List<Media> mediaContent){
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.mediaContent = mediaContent;
+    }
 
     public void addMedia(Media media) {
         mediaContent.add(media);
     }
 
-    public void removeImage(Media media) {
+    public void removeMedia(Media media) {
         mediaContent.remove(media);
     }
 
-    public void removeImage(UUID id) {
+    public void removeMedia(UUID id) {
         mediaContent.removeIf(media -> media.getId().equals(id));
     }
 
