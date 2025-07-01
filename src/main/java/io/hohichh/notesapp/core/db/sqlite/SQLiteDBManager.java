@@ -1,4 +1,4 @@
-package io.hohichh.notesapp.core.db;
+package io.hohichh.notesapp.core.db.sqlite;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,19 +8,27 @@ import java.sql.Statement;
 import static io.hohichh.notesapp.core.db.queries.InitTablesQueries.*;
 
 public class SQLiteDBManager {
-    private static String DB_URL= "jdbc:sqlite:notes.db";
+    private String url;
+    private Connection conn;
 
-    private SQLiteDBManager() {}
-
-    public static void useDataBase(String dbName){
-        DB_URL = "jdbc:sqlite:" + dbName;
-    }
-    public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(DB_URL);
+    public SQLiteDBManager() {
+        this.url = "jdbc:sqlite:notes.db";
     }
 
-    public static void initTables() throws SQLException {
-        try(Connection conn = SQLiteDBManager.getConnection();
+    public void useDataBase(String dbName){
+        url = "jdbc:sqlite:" + dbName;
+    }
+    public Connection getConnection() throws SQLException {
+        if (conn == null) {
+            conn = DriverManager.getConnection(url);
+            return conn;
+        }
+        return this.conn;
+    }
+
+    public void initTables() throws SQLException {
+        Connection conn = getConnection();
+        try(
             Statement stmt = conn.createStatement()) {
             conn.setAutoCommit(false);
 

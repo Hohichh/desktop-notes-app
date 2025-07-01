@@ -1,4 +1,4 @@
-package io.hohichh.notesapp.core.db;
+package io.hohichh.notesapp.core.db.sqlite;
 
 import io.hohichh.notesapp.core.model.Media;
 import io.hohichh.notesapp.core.model.Note;
