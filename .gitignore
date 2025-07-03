@@ -38,4 +38,5 @@ build/
 .DS_Store
 
 ### project
-!**/src/main/java/io/hohichh/notesapp/data/
+src/main/java/io/hohichh/notesapp/data/
+src/test/

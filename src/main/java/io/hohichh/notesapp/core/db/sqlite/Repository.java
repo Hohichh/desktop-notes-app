@@ -1,6 +1,6 @@
 package io.hohichh.notesapp.core.db.sqlite;
 
-import io.hohichh.notesapp.core.db.Repository;
+import io.hohichh.notesapp.core.db.IRepository;
 import io.hohichh.notesapp.core.exceptions.SqliteRepException;
 import io.hohichh.notesapp.core.model.Note;
 
@@ -14,10 +14,10 @@ import java.util.List;
 import static io.hohichh.notesapp.core.db.queries.MediaQueries.*;
 import static io.hohichh.notesapp.core.db.queries.NoteQueries.*;
 
-public class SQLiteRepository implements Repository {
-    SQLiteDBManager manager;
+public class Repository implements IRepository {
+    Connector manager;
 
-    public SQLiteRepository(SQLiteDBManager connManager) throws SqliteRepException {
+    public Repository(Connector connManager) throws SqliteRepException {
         manager = connManager;
         try {
             manager.initTables();
@@ -27,13 +27,14 @@ public class SQLiteRepository implements Repository {
     }
 
     @Override
-    public void createNote(Note note) throws SqliteRepException {
-        try(Connection conn = manager.getConnection();
-            PreparedStatement psNote = conn.prepareStatement(CREATE_NOTE);
-            PreparedStatement psMedia = conn.prepareStatement(CREATE_MEDIA)) {
-
+    public void create(Note note) throws SqliteRepException {
+        try {
+            Connection conn = manager.getConnection();
             conn.setAutoCommit(false);
-            try{
+
+            try(PreparedStatement psNote = conn.prepareStatement(CREATE_NOTE);
+                PreparedStatement psMedia = conn.prepareStatement(CREATE_MEDIA)){
+
                 DTOMapper.noteToCreateStmt(note, psNote);
                 psNote.executeUpdate();
 
@@ -50,13 +51,14 @@ public class SQLiteRepository implements Repository {
     }
 
     @Override
-    public void deleteNote(String id) throws SqliteRepException {
-        try(Connection conn = manager.getConnection();
-            PreparedStatement psNote = conn.prepareStatement(DELETE_NOTE);
-            PreparedStatement psMedia = conn.prepareStatement(DELETE_MEDIA_BY_NOTE_ID)){
-
+    public void delete(String id) throws SqliteRepException {
+        try{
+            Connection conn = manager.getConnection();
             conn.setAutoCommit(false);
-            try{
+
+            try(PreparedStatement psNote = conn.prepareStatement(DELETE_NOTE);
+                PreparedStatement psMedia = conn.prepareStatement(DELETE_MEDIA_BY_NOTE_ID)){
+
                 psMedia.setString(1, id);
                 psMedia.executeUpdate();
 
@@ -74,7 +76,7 @@ public class SQLiteRepository implements Repository {
     }
 
     @Override
-    public Note getNote(String id) throws SqliteRepException {
+    public Note get(String id) throws SqliteRepException {
         Note note = null;
         try(Connection conn = manager.getConnection();
             PreparedStatement psNote = conn.prepareStatement(SELECT_NOTE);
@@ -96,7 +98,7 @@ public class SQLiteRepository implements Repository {
     }
 
     @Override
-    public void updateNote(Note note) throws SqliteRepException {
+    public void update(Note note) throws SqliteRepException {
         try(Connection conn = manager.getConnection();
             PreparedStatement psNote = conn.prepareStatement(UPDATE_NOTE);
             PreparedStatement psDelOldMedia = conn.prepareStatement(DELETE_MEDIA_BY_NOTE_ID);
@@ -124,7 +126,7 @@ public class SQLiteRepository implements Repository {
     }
 
     @Override
-    public List<Note> getAllNotes() throws SqliteRepException {
+    public List<Note> getAll() throws SqliteRepException {
         List<Note> notes = null;
         try(Connection conn = manager.getConnection();
             PreparedStatement psNotes = conn.prepareStatement(SELECT_ALL_NOTES)){

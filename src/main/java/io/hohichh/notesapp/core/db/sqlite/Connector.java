@@ -7,25 +7,27 @@ import java.sql.Statement;
 
 import static io.hohichh.notesapp.core.db.queries.InitTablesQueries.*;
 
-public class SQLiteDBManager {
-    private String url;
-    private Connection conn;
+public class Connector {
+    private static String url = "jdbc:sqlite:notes.db";
+    private static Connection conn;
 
-    public SQLiteDBManager() {
-        this.url = "jdbc:sqlite:notes.db";
+    private Connector() {
     }
 
-    public void useDataBase(String dbName){
+    public static void useDataBase(String dbName){
         url = "jdbc:sqlite:" + dbName;
     }
-    public Connection getConnection() throws SQLException {
+
+    public static Connection getConnection() throws SQLException {
         if (conn == null) {
             conn = DriverManager.getConnection(url);
             return conn;
         }
-        return this.conn;
+        return conn;
     }
 
+
+    //todo: перенести в репозиторий
     public void initTables() throws SQLException {
         Connection conn = getConnection();
         try(

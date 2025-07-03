@@ -1,6 +1,6 @@
 package io.hohichh.notesapp.core;
 
-import io.hohichh.notesapp.core.db.Repository;
+import io.hohichh.notesapp.core.db.IRepository;
 import io.hohichh.notesapp.core.exceptions.StorageException;
 import io.hohichh.notesapp.core.model.ImageWrapper;
 import io.hohichh.notesapp.core.model.Media;
@@ -12,10 +12,10 @@ import java.util.List;
 
 //todo: проверить что при обновлении заметки корректно меняется время обновления
 public class BasicNotebook implements Notebook {
-    private final Repository repository;
+    private final IRepository repository;
     private final FileManager fileManager;
 
-    public BasicNotebook(Repository repository, FileManager fileManager) {
+    public BasicNotebook(IRepository repository, FileManager fileManager) {
         this.repository = repository;
         this.fileManager = fileManager;
     }
