@@ -29,7 +29,6 @@ public class Note {
         mediaContent = new ArrayList<>();
     }
 
-    @Builder
     public Note(UUID id, String title, String content,
                 LocalDateTime createdAt, LocalDateTime updatedAt,
                 List<Media> mediaContent){
