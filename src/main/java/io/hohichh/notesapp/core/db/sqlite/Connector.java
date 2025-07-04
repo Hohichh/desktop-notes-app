@@ -26,22 +26,9 @@ public class Connector {
         return conn;
     }
 
-
-    //todo: перенести в репозиторий
-    public void initTables() throws SQLException {
-        Connection conn = getConnection();
-        try(
-            Statement stmt = conn.createStatement()) {
-            conn.setAutoCommit(false);
-
-            stmt.execute(CREATE_NOTES_TABLE);
-            stmt.execute(CREATE_MEDIA_TABLE);
-            try{
-                conn.commit();
-            } catch (SQLException e) {
-                conn.rollback();
-                throw e;
-            }
+    public static void closeConnection() throws SQLException {
+        if (conn != null && !conn.isClosed()) {
+            conn.close();
         }
     }
 }
