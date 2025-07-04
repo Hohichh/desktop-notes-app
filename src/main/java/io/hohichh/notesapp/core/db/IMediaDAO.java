@@ -1,14 +1,14 @@
 package io.hohichh.notesapp.core.db;
 
 import io.hohichh.notesapp.core.model.Media;
+import io.hohichh.notesapp.core.model.Note;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
 public interface IMediaDAO {
-    void create(Media media);
-    void update(Media media);
-    void delete(UUID id);
-    Media get(UUID id);
-    List<Media> getAll();
+    void create(Media media) throws SQLException;
+    void delete(Note note) throws SQLException;
+    List<Media> getAll(Note note) throws SQLException;
 }
