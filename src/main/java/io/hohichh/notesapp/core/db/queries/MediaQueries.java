@@ -12,7 +12,5 @@ public class MediaQueries {
     public static final String DELETE_MEDIA_BY_NOTE_ID =
             "DELETE FROM media " +
                     "WHERE note_id = ?";
-    public static final String DELETE_MEDIA =
-            "DELETE FROM media " +
-                    "WHERE id = ?";
+
 }

@@ -17,16 +17,19 @@ public class MediaDAO implements IMediaDAO {
     public MediaDAO(){}
 
     @Override
-    public void create(Media media) throws SQLException {
+    public void create(List<Media> listOfMedia) throws SQLException {
         var conn = Connector.getConnection();
         conn.setAutoCommit(false);
 
         try(var ps = conn.prepareStatement(CREATE_MEDIA)){
-            ps.setString(1, str(media.getId()));
-            ps.setString(2, str(media.getNoteId()));
-            ps.setString(3, media.getPath());
-            ps.setString(4, media.getInsertLabel());
-            ps.executeUpdate();
+            for(Media media: listOfMedia){
+                ps.setString(1, str(media.getId()));
+                ps.setString(2, str(media.getNoteId()));
+                ps.setString(3, media.getPath());
+                ps.setString(4, media.getInsertLabel());
+                ps.addBatch();
+            }
+            ps.executeBatch();
 
             conn.commit();
         } catch (SQLException e){

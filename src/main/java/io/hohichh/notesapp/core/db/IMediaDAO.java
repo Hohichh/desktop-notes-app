@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface IMediaDAO {
-    void create(Media media) throws SQLException;
+    void create(List<Media> listOfMedia) throws SQLException;
     void delete(Note note) throws SQLException;
     List<Media> getAll(Note note) throws SQLException;
 }
