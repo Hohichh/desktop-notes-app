@@ -62,30 +62,26 @@ public class Repository implements IRepository {
     }
 
     @Override
-    public Note get(UUID id)  {
-        Note note = null;
-        try{
+    public Note get(UUID id)  {try{
             var listOfMedia = mediaDAO.getAll(id);
-            note = noteDAO.get(id);
+            Note note = noteDAO.get(id);
 
             for(Media media: listOfMedia){
                 note.addMedia(media);
             }
+            return note;
         }catch (SQLException e){
             throw new RepositoryException("Can't get note: " + e.getMessage(), e);
         }
-        return note;
     }
 
     @Override
     public List<Note> getAll()  {
-        List<Note> notes = null;
         try{
-            notes = noteDAO.getAll();
+            return noteDAO.getAll();
         }catch (SQLException e){
             throw new RepositoryException("Can't get list of notes: " + e.getMessage(), e);
         }
-        return notes;
     }
 
     private void initTables() throws SQLException {
