@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-//todo: подумать над инкапсуляцией методов коллекций в полях
+
 public class Note {
     protected final UUID id;
     protected String title;
