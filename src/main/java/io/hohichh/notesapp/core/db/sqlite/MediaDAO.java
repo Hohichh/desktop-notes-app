@@ -2,7 +2,6 @@ package io.hohichh.notesapp.core.db.sqlite;
 
 import io.hohichh.notesapp.core.db.IMediaDAO;
 import io.hohichh.notesapp.core.model.Media;
-import io.hohichh.notesapp.core.model.Note;
 
 import static io.hohichh.notesapp.core.db.queries.MediaQueries.*;
 import static io.hohichh.notesapp.core.util.TypeMap.*;
@@ -12,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-//todo оформить эксепшены
 public class MediaDAO implements IMediaDAO {
     public MediaDAO(){}
 
@@ -34,33 +32,35 @@ public class MediaDAO implements IMediaDAO {
             conn.commit();
         } catch (SQLException e){
             conn.rollback();
-            throw new SQLException(e);
+            throw new SQLException("\nError while executing '"
+                    + CREATE_MEDIA +"' query: "
+                    + e.getMessage(), e);
         }
     }
 
     @Override
-    public void delete(Note note) throws SQLException {
+    public void delete(UUID noteId) throws SQLException {
         var conn = Connector.getConnection();
         conn.setAutoCommit(false);
-        UUID noteID = note.getId();
 
         try(var ps = conn.prepareStatement(DELETE_MEDIA_BY_NOTE_ID)){
-            ps.setString(1, str(noteID));
+            ps.setString(1, str(noteId));
             ps.executeUpdate();
 
             conn.commit();
         }catch (SQLException e){
             conn.rollback();
-            throw new SQLException(e);
+            throw new SQLException("\nError while executing '" +
+                    DELETE_MEDIA_BY_NOTE_ID +"' query: "
+                    + e.getMessage(), e);
         }
     }
 
     @Override
-    public List<Media> getAll(Note note) throws SQLException {
+    public List<Media> getAll(UUID noteId) throws SQLException {
         var conn = Connector.getConnection();
         conn.setAutoCommit(true);
 
-        UUID noteId = note.getId();
         List<Media> mediaList = new ArrayList<>();
         try(var ps = conn.prepareStatement(SELECT_MEDIA_BY_NOTE_ID)){
             ps.setString(1, str(noteId));
@@ -76,7 +76,9 @@ public class MediaDAO implements IMediaDAO {
                 );
             }
         }catch (SQLException e){
-            throw new SQLException(e);
+            throw new SQLException("\nError while executing '"
+                    + SELECT_MEDIA_BY_NOTE_ID +"' query: "
+                    + e.getMessage(), e);
         }
         return mediaList;
     }

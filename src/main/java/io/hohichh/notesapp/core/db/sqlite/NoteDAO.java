@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-//todo: оформить вывод исключений
+
 public class NoteDAO implements INoteDAO {
     public NoteDAO() {
     }
@@ -32,7 +32,9 @@ public class NoteDAO implements INoteDAO {
             conn.commit();
         }catch (SQLException e) {
             conn.rollback();
-            throw new SQLException(e);
+            throw new SQLException("\nError while executing '"
+                    + CREATE_NOTE +"' query: "
+                    + e.getMessage(), e);
         }
     }
 
@@ -50,7 +52,9 @@ public class NoteDAO implements INoteDAO {
             conn.commit();
         } catch (SQLException e) {
             conn.rollback();
-            throw new SQLException(e);
+            throw new SQLException("\nError while executing '"
+                    + UPDATE_NOTE +"' query: "
+                    + e.getMessage(), e);
         }
     }
 
@@ -66,7 +70,9 @@ public class NoteDAO implements INoteDAO {
             conn.commit();
         } catch (SQLException e) {
             conn.rollback();
-            throw new SQLException(e);
+            throw new SQLException("\nError while executing '"
+                    + DELETE_NOTE +"' query: "
+                    + e.getMessage(), e);
         }
     }
 
@@ -86,12 +92,14 @@ public class NoteDAO implements INoteDAO {
                         rs.getString("title"),
                         rs.getString("content"),
                         obj(rs.getLong("created_at")),
-                        obj(rs.getLong("update_at")),
+                        obj(rs.getLong("updated_at")),
                         new ArrayList<Media>()
                 );
             }
         } catch (SQLException e) {
-            throw new SQLException(e);
+            throw new SQLException("\nError while executing '"
+                    + SELECT_NOTE +"' query: "
+                    + e.getMessage(), e);
         }
         return note;
     }
@@ -117,9 +125,10 @@ public class NoteDAO implements INoteDAO {
                 );
             }
         } catch (SQLException e) {
-            throw new SQLException(e);
+            throw new SQLException("\nError while executing '"
+                    + SELECT_ALL_NOTES +"' query: "
+                    + e.getMessage(), e);
         }
-
         return notes;
     }
 }
