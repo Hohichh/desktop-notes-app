@@ -6,7 +6,7 @@ public class NoteQueries {
             "(id, title, content, created_at, updated_at) " +
             "VALUES (?, ?, ?, ?, ?)";
     public static final String SELECT_NOTE =
-            "SELECT (id, title, content, created_at, updated_at) " +
+            "SELECT id, title, content, created_at, updated_at " +
             "FROM notes " +
             "WHERE id = ?";
     public static final String UPDATE_NOTE =
