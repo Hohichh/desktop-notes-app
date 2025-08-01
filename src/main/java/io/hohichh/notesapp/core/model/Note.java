@@ -1,6 +1,5 @@
 package io.hohichh.notesapp.core.model;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 

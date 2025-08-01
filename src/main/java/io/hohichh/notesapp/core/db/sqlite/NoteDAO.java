@@ -93,7 +93,7 @@ public class NoteDAO implements INoteDAO {
                         rs.getString("content"),
                         obj(rs.getLong("created_at")),
                         obj(rs.getLong("updated_at")),
-                        new ArrayList<Media>()
+                        new ArrayList<>()
                 );
             }
         } catch (SQLException e) {
@@ -120,7 +120,7 @@ public class NoteDAO implements INoteDAO {
                         rs.getString("content"),
                         obj(rs.getLong("updated_at")),
                         obj(rs.getLong("created_at")),
-                        new ArrayList<Media>()
+                        new ArrayList<>()
                         )
                 );
             }
