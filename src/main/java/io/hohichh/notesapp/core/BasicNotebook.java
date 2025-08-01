@@ -6,9 +6,13 @@ import io.hohichh.notesapp.core.model.ImageWrapper;
 import io.hohichh.notesapp.core.model.Media;
 import io.hohichh.notesapp.core.model.Note;
 import io.hohichh.notesapp.core.storage.FileManager;
+
+import static io.hohichh.notesapp.core.util.TypeMap.*;
+
 import javafx.scene.image.Image;
 
 import java.util.List;
+import java.util.UUID;
 
 //todo: проверить что при обновлении заметки корректно меняется время обновления
 public class BasicNotebook implements Notebook {
@@ -30,7 +34,7 @@ public class BasicNotebook implements Notebook {
                     fileManager.save(image, wrapper.getPath());
                 }
             }
-            repository.createNote(note);
+            repository.create(note);
         } catch (StorageException e) {
             throw new RuntimeException(e);
         }
@@ -39,12 +43,12 @@ public class BasicNotebook implements Notebook {
     @Override
     public void updateNote(Note note) {
         try{
-            Note oldNote = repository.getNote(note.getId().toString());
+            Note oldNote = repository.get(note.getId());
             for(var media : oldNote.getMediaContent()) {
                 fileManager.delete(media.getPath());
             }
 
-            repository.updateNote(note);
+            repository.update(note);
             for(var media : note.getMediaContent()) {
                 if (media instanceof ImageWrapper wrapper) {
                     var image = wrapper.getImage();
@@ -57,9 +61,9 @@ public class BasicNotebook implements Notebook {
     }
 
     @Override
-    public Note getNote(String id) {
+    public Note getNote(UUID id) {
         try{
-            Note note = repository.getNote(id);
+            Note note = repository.get(id);
             List<Media> media = note.getMediaContent();
             for (var mediaObj: media){
                 var obj = fileManager.load(mediaObj.getPath());
@@ -77,18 +81,18 @@ public class BasicNotebook implements Notebook {
     @Override
     public List<Note> getAllNotes() {
         try{
-            return repository.getAllNotes();
+            return repository.getAll();
         } catch (StorageException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void deleteNote(String id) {
+    public void deleteNote(UUID id) {
         try{
             //todo перепроверить пути
-            fileManager.delete(id);
-            repository.deleteNote(id);
+            fileManager.delete(str(id));
+            repository.delete(id);
         } catch (StorageException e) {
             throw new RuntimeException(e);
         }
