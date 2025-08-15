@@ -40,3 +40,5 @@ build/
 ### project
 src/main/java/io/hohichh/notesapp/data/
 src/test/
+src/main/resources/fonts/
+src/main/resources/icons/

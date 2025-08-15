@@ -2,10 +2,15 @@
    ОСНОВНЫЕ СТИЛИ И ШРИФТЫ
    ================================================================= */
 
+@font-face {
+    font-family: 'Montserrat'; /* Название, которое вы будете использовать */
+    src: url('/fonts/Montserrat/Montserrat-Bold.ttf'); /* Путь к файлу шрифта */
+}
+
 /* .root — это самый главный контейнер нашего окна. */
 .root {
     /* Устанавливаем шрифт Montserrat по умолчанию для всего приложения */
-    -fx-font-family: 'Montserrat';
+    -fx-font-family: 'Lobster';
     /* Задаем основной цвет фона, как на макете */
     -fx-background-color: #B3C0D6;
 }
@@ -25,7 +30,7 @@
 
 /* Стили для заголовка "ThinkNotes" */
 .app-title {
-    -fx-font-size: 22px;
+    -fx-font-size: 32px;
     -fx-font-weight: bold; /* Делаем шрифт жирным */
     -fx-text-fill: #283043; /* Цвет текста */
 }
